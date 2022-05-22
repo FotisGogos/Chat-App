@@ -129,7 +129,7 @@ renderBubble(props) {
 }
 
   render() {
-    let { color } = this.props.route.params;
+    let { color, name } = this.props.route.params;
     return (
       <View style={[{ backgroundColor: color }, styles.container]}>
       <GiftedChat
@@ -138,7 +138,7 @@ renderBubble(props) {
       onSend={(messages) => this.onSend(messages)}
       user={{
         _id: this.state.user._id,
-        name: this.state.name,
+        name: name,
          avatar: this.state.user.avatar 
 
       }}

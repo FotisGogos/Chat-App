@@ -30,6 +30,7 @@ class Chat extends Component {
         name: "",
         avatar: "",
       },
+      isConnected: false,
     }
 
     // initializes the Firestore app
@@ -48,8 +49,16 @@ class Chat extends Component {
 
     // Reference to load messages via Firebase
     this.referenceChatMessages = firebase.firestore().collection("messages");
-
-    // Authenticates user via Firebase
+    
+    
+    NetInfo.fetch().then(connection => {
+      if (connection.isConnected) {
+        this.setState({ isConnected: true });
+        console.log('online');
+      } else {
+        console.log('offline');
+      }
+      // Authenticates user via Firebase
     this.authUnsubscribe = firebase.auth().onAuthStateChanged((user) => {
       if (!user) {
         firebase.auth().signInAnonymously();
@@ -67,18 +76,14 @@ class Chat extends Component {
                 .firestore()
                 .collection("messages")
                 .where("uid", '==', this.state.uid);
+                
+                // save messages when user online
+                this.saveMessages();
       this.unsubscribe = this.referenceChatMessages
         .orderBy("createdAt", "desc")
         .onSnapshot(this.onCollectionUpdate);
   });
-
-  NetInfo.fetch().then(connection => {
-    if (connection.isConnected) {
-      console.log('online');
-    } else {
-      console.log('offline');
-    }
-  });
+    });
 }
 
 // save messages to local storage
@@ -140,23 +145,6 @@ onSend(messages = []) {
   });
 }
 
-onCollectionUpdate = (querySnapshot) => {
-  const messages = [];
-  // go through each document
-  querySnapshot.forEach((doc) => {
-    // get the QueryDocumentSnapshot's data
-    let data = doc.data();
-    messages.push({
-      _id: data._id,
-      text: data.text,
-      createdAt: data.createdAt.toDate(),
-      user: data.user,
-    });
-  });
-  this.setState({
-    messages: messages
-  });
-}
 
 // When user is offline disable sending new messages 
 renderInputToolbar(props) {
@@ -191,6 +179,7 @@ renderBubble(props) {
       <GiftedChat
       renderBubble={this.renderBubble.bind(this)}
       messages={this.state.messages}
+      renderInputToolbar={this.renderInputToolbar.bind(this)}
       onSend={(messages) => this.onSend(messages)}
       user={{
         _id: this.state.user._id,

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat'
 import { View, Text, StyleSheet} from 'react-native';
 
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import NetInfo from '@react-native-community/netinfo';
 
 //Firestore Database
@@ -81,7 +81,7 @@ class Chat extends Component {
                 this.saveMessages();
       this.unsubscribe = this.referenceChatMessages
         .orderBy("createdAt", "desc")
-        .onSnapshot(this.onCollectionUpdate);
+        
   });
     });
 }
@@ -121,7 +121,7 @@ async deleteMessages() {
 // stop listening to auth and collection changes
 componentWillUnmount() {
   this.authUnsubscribe();
-  this.unsubscribe();
+  
 }
 
  // Adds messages to cloud storage

@@ -1,6 +1,9 @@
 import React, { Component } from "react";
-import { GiftedChat, Bubble } from 'react-native-gifted-chat'
+import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat'
 import { View, Text, StyleSheet} from 'react-native';
+
+import AsyncStorage from '@react-native-community/async-storage';
+import NetInfo from '@react-native-community/netinfo';
 
 //Firestore Database
 const firebase = require('firebase');
@@ -68,6 +71,46 @@ class Chat extends Component {
         .orderBy("createdAt", "desc")
         .onSnapshot(this.onCollectionUpdate);
   });
+
+  NetInfo.fetch().then(connection => {
+    if (connection.isConnected) {
+      console.log('online');
+    } else {
+      console.log('offline');
+    }
+  });
+}
+
+// save messages to local storage
+async getMessages() {
+  let messages = '';
+  try {
+    messages = await AsyncStorage.getItem('messages') || [];
+    this.setState({
+      messages: JSON.parse(messages)
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+async saveMessages() {
+  try {
+    await AsyncStorage.setItem('messages', JSON.stringify(this.state.messages));
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+async deleteMessages() {
+  try {
+    await AsyncStorage.removeItem('messages');
+    this.setState({
+      messages: []
+    })
+  } catch (error) {
+    console.log(error.message);
+  }
 }
 
 // stop listening to auth and collection changes
@@ -93,6 +136,7 @@ onSend(messages = []) {
     messages: GiftedChat.append(previousState.messages, messages),
   }),() => {
     this.addMessages();
+    this.saveMessages();
   });
 }
 
@@ -112,6 +156,18 @@ onCollectionUpdate = (querySnapshot) => {
   this.setState({
     messages: messages
   });
+}
+
+// When user is offline disable sending new messages 
+renderInputToolbar(props) {
+  if (this.state.isConnected == false) {
+  } else {
+    return(
+      <InputToolbar
+      {...props}
+      />
+    );
+  }
 }
 
 // Customize the color of the sender bubble

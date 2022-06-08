@@ -92,7 +92,7 @@ npm install --global expo-cli
 
 To launch the project you can use Xcode(Mac), Android Studio (Windows) OR your can install the expo app to your phone.
 
-App store link(Apple) => https://apps.apple.com/de/app/expo-go/id982107779
-Google play(Android) => https://play.google.com/store/apps/details?id=host.exp.exponent&hl=en_US&gl=US
+* App store link(Apple) => https://apps.apple.com/de/app/expo-go/id982107779
+* Google play(Android) => https://play.google.com/store/apps/details?id=host.exp.exponent&hl=en_US&gl=US
 
-* Using the command  ```sh expo start ``` will initialize the project
+* Using the command  ``` expo start ``` will initialize the project

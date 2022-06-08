@@ -1,4 +1,6 @@
-# Chat-App is a mobile application using React Native. The app will provide users with a chat interface and options to share images and their location.
+# Chat-App
+
+Chat App is a mobile application using React Native. The app will provide users with a chat interface and options to share images and their location.
 
 <!-- TABLE OF CONTENTS -->
 <details>

@@ -1,15 +1,22 @@
 import React, { Component } from "react";
+
+//import relevant components from react native
 import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat'
 import { View, Text, StyleSheet} from 'react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import NetInfo from '@react-native-community/netinfo';
 
+import MapView from 'react-native-maps';
+
+//import custom CustomActions
+import CustomActions from './CustomActions';
+
 //Firestore Database
 const firebase = require('firebase');
 require('firebase/firestore');
 
-// SDK from Firestore
+//// firebase adding credential in order to connect to firebase
 const firebaseConfig = {
   apiKey: "AIzaSyAkAG8etHIl5LD8a3F3RJ2SOxp2mIP9_Gc",
   authDomain: "chatapp-3892d.firebaseapp.com",
@@ -29,6 +36,8 @@ class Chat extends Component {
         _id: "",
         name: "",
         avatar: "",
+        image: null,
+        location: null,
       },
       isConnected: false,
     }
@@ -86,7 +95,7 @@ class Chat extends Component {
     });
 }
 
-// save messages to local storage
+// // temporarly storage of messages (storage)
 async getMessages() {
   let messages = '';
   try {
@@ -95,10 +104,11 @@ async getMessages() {
       messages: JSON.parse(messages)
     });
   } catch (error) {
-    console.log(error.message);
+    
   }
 };
 
+// firebase storage
 async saveMessages() {
   try {
     await AsyncStorage.setItem('messages', JSON.stringify(this.state.messages));
@@ -133,6 +143,8 @@ componentWillUnmount() {
     text: message.text || "",
     createdAt: message.createdAt,
     user: message.user,
+    image: message.image || null,
+    location: message.location || null,
   });
 }
 
@@ -144,6 +156,31 @@ onSend(messages = []) {
     this.saveMessages();
   });
 }
+
+
+onCollectionUpdate = (querySnapshot) => {
+  const messages = [];
+  // go through each document
+  querySnapshot.forEach((doc) => {
+    // get the QueryDocumentSnapshot's data
+    var data = doc.data();
+    messages.push({
+      _id: data._id,
+      text: data.text,
+      createdAt: data.createdAt.toDate(),
+      user: {
+        _id: data.user._id,
+        name: data.user.name,
+        avatar: data.user.avatar
+      },
+      image: data.image || null,
+      location: data.location || null,
+    });
+  });
+  this.setState({
+    messages: messages,
+  });
+};
 
 
 // When user is offline disable sending new messages 
@@ -172,21 +209,54 @@ renderBubble(props) {
   )
 }
 
+// creating the circle button
+renderCustomActions = (props) => {
+  return <CustomActions {...props} />;
+};
+
+ //Render the map location
+renderCustomView (props) {
+  const { currentMessage} = props;
+  if (currentMessage.location) {
+    return (
+        <MapView
+          style={{width: 150,
+            height: 100,
+            borderRadius: 13,
+            margin: 3}}
+          region={{
+            latitude: currentMessage.location.latitude,
+            longitude: currentMessage.location.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+        />
+    );
+  }
+  return null;
+}
+
   render() {
     let { color, name } = this.props.route.params;
     return (
+
+      //fullscreen component
       <View style={[{ backgroundColor: color }, styles.container]}>
       <GiftedChat
-      renderBubble={this.renderBubble.bind(this)}
-      messages={this.state.messages}
-      renderInputToolbar={this.renderInputToolbar.bind(this)}
-      onSend={(messages) => this.onSend(messages)}
-      user={{
-        _id: this.state.user._id,
-        name: name,
-         avatar: this.state.user.avatar 
+          renderBubble={this.renderBubble.bind(this)}
+          messages={this.state.messages}
+          //Render action is responsible for creating the circle button 
+          renderActions={this.renderCustomActions}
+          
+          renderInputToolbar={this.renderInputToolbar.bind(this)}
+          renderCustomView={this.renderCustomView}
+          onSend={(messages) => this.onSend(messages)}
+          user={{
+            _id: this.state.user._id,
+            name: name,
+            avatar: this.state.user.avatar 
 
-      }}
+          }}
     />
      {/* Avoid keyboard to overlap text messages on older Andriod versions  */}
     {Platform.OS === 'android' ? <KeyboardAvoidingView behavior="height" /> : null}

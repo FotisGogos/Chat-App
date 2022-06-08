@@ -17,7 +17,6 @@ Chat App is a mobile application using React Native. The app will provide users 
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
         <li><a href="#installation">Installation</a></li>
-        <li><a href="#launchproject">Installation</a></li>
       </ul>
       </li>
     <li><a href="#Dependencies">Dependencies</a></li>

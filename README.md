@@ -104,12 +104,12 @@ To launch the project you can use Xcode(Mac), Android Studio (Windows) OR your c
 ##  Dependencies
 
  *@react-native-async-storage/async-storage": "~1.15.0",
-  * @react-native-community/masked-view": "^0.1.11",
-   * @react-native-community/netinfo": "7.1.3",
-    * @react-navigation/native": "^6.0.10",
-    * @react-navigation/stack": "^6.2.1",
-    * expo": "~44.0.0",
-    * expo-status-bar": "~1.2.0",
+  *@react-native-community/masked-view": "^0.1.11",
+   *@react-native-community/netinfo": "7.1.3",
+    *@react-navigation/native": "^6.0.10",
+    *@react-navigation/stack": "^6.2.1",
+    *expo": "~44.0.0",
+    *expo-status-bar": "~1.2.0",
     * firebase": "^7.9.0",
     * react": "17.0.1",
     * react-dom": "17.0.1",

@@ -48,3 +48,51 @@ before joining the chat.
 * The chat must provide users with two additional communication features: sending images
 and location data.
 * Data gets stored online and offline.
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+### Built With
+
+#### Frameworks/libraries
+
+* [React.js](https://reactjs.org/)
+* [Expo](https://expo.dev/)
+
+#### Database
+
+* [Firebase Cloud Storage](https://firebase.google.com/)
+
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+<!-- GETTING STARTED -->
+## Getting Started
+
+### Prerequisites
+
+* npm
+  ```sh
+  npm install npm@latest -g
+  ```
+  * This command installs all the latest required  dependecies.
+ 
+ ### Installation
+ 
+ 1) Open your terminal and type
+
+$ git clone {https://github.com/FotisGogos/Chat-App.git}
+
+This clones the repo
+ 
+ 2) Install expo-cli 
+  
+npm install --global expo-cli
+
+ ### Launch Project
+
+To launch the project you can use Xcode(Mac), Android Studio (Windows) OR your can install the expo app to your phone.
+
+App store link(Apple) => https://apps.apple.com/de/app/expo-go/id982107779
+Google play(Android) => https://play.google.com/store/apps/details?id=host.exp.exponent&hl=en_US&gl=US
+
+* Using the command  ```sh expo start ``` will initialize the project
